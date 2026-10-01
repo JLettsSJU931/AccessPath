@@ -1,0 +1,104 @@
+AccessPath Backend - Startup & Common Commands
+==============================================
+
+All commands below are run from the backend/ directory unless noted:
+
+    cd backend
+
+
+1. FIRST-TIME SETUP
+-------------------
+
+Create a virtual environment (keeps project packages separate from your system Python):
+
+    python3 -m venv .venv
+
+Activate it:
+
+    macOS / Linux:   source .venv/bin/activate
+    Windows (cmd):   .venv\Scripts\activate
+    Windows (PS):    .venv\Scripts\Activate.ps1
+
+Install dependencies:
+
+    pip install fastapi uvicorn
+
+    (Once a requirements.txt exists, use this instead:)
+    pip install -r requirements.txt
+
+
+2. START THE BACKEND
+--------------------
+
+Make sure the virtual environment is activated, then:
+
+    uvicorn app.main:app --reload
+
+    --reload   restarts the server automatically when you save a file (dev only)
+
+Run on a different port:
+
+    uvicorn app.main:app --reload --port 8001
+
+Make it reachable from other devices on your network:
+
+    uvicorn app.main:app --reload --host 0.0.0.0
+
+Stop the server:   Ctrl + C
+
+
+3. CHECK THAT IT'S RUNNING
+--------------------------
+
+    Root:              http://127.0.0.1:8000/
+    Health check:      http://127.0.0.1:8000/health
+    Interactive docs:  http://127.0.0.1:8000/docs    (Swagger UI - try endpoints here)
+    Alternate docs:    http://127.0.0.1:8000/redoc
+
+From the terminal:
+
+    curl http://127.0.0.1:8000/health
+
+
+4. MANAGING DEPENDENCIES
+------------------------
+
+Install a new package:
+
+    pip install <package-name>
+
+Save current packages to requirements.txt (do this after installing anything new):
+
+    pip freeze > requirements.txt
+
+See what's installed:
+
+    pip list
+
+
+5. VIRTUAL ENVIRONMENT
+----------------------
+
+Leave the virtual environment:
+
+    deactivate
+
+Re-enter it later (each new terminal session):
+
+    source .venv/bin/activate        (macOS / Linux)
+    .venv\Scripts\activate           (Windows)
+
+
+6. TROUBLESHOOTING
+------------------
+
+"ModuleNotFoundError: No module named 'fastapi'"
+    -> The virtual environment isn't activated, or dependencies aren't installed.
+       Activate it (step 1) and run pip install again.
+
+"ModuleNotFoundError: No module named 'app'"
+    -> You're in the wrong directory. Run uvicorn from backend/, not backend/app/.
+
+"Address already in use"
+    -> Something is already on port 8000. Stop it, or use --port 8001.
+       Find what's using it (macOS / Linux):   lsof -i :8000
